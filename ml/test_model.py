@@ -1,34 +1,52 @@
 from pathlib import Path
 
 import joblib
-from sklearn.datasets import load_iris
+import pandas as pd
 
 
-# Find the saved model
-current_directory = Path(__file__).resolve().parent
-model_path = current_directory / "saved_model" / "model.joblib"
+# ============================================================
+# 1. Find the saved model
+# ============================================================
+
+project_root = Path(__file__).resolve().parent.parent
+
+model_path = project_root / "ml" / "saved_model" / "model.joblib"
 
 
-# Load the Iris dataset
-iris = load_iris()
+# ============================================================
+# 2. Load the trained model
+# ============================================================
 
-
-# Load the saved model
 model = joblib.load(model_path)
 
-
-# Sample flower data
-sample = [[5.1, 3.5, 1.4, 0.2]]
-
-
-# Make prediction
-prediction = model.predict(sample)
-
-
-# Convert prediction number to flower name
-predicted_class = iris.target_names[prediction[0]]
-
-
 print("Model loaded successfully!")
-print(f"Input: {sample[0]}")
-print(f"Predicted class: {predicted_class}")
+
+
+# ============================================================
+# 3. Create test input
+# ============================================================
+
+input_data = pd.DataFrame(
+    [[5.1, 3.5, 1.4, 0.2]],
+    columns=[
+        "sepal length (cm)",
+        "sepal width (cm)",
+        "petal length (cm)",
+        "petal width (cm)"
+    ]
+)
+
+
+# ============================================================
+# 4. Make prediction
+# ============================================================
+
+prediction = model.predict(input_data)
+
+
+# ============================================================
+# 5. Display result
+# ============================================================
+
+print("Input:", input_data.iloc[0].tolist())
+print("Predicted class:", prediction[0])
