@@ -25,3 +25,9 @@ class PredictionInput(BaseModel):
         gt=0,
         description="Petal width must be greater than 0"
     )
+
+
+class PredictionOutput(BaseModel):
+    prediction: str
+    confidence: float
+    request_id: str
