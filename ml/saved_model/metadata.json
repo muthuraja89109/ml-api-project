@@ -1,0 +1,12 @@
+{
+    "model_type": "RandomForestClassifier",
+    "model_version": "1.0.0",
+    "training_date": "2026-09-01 12:58:06",
+    "accuracy": 0.9,
+    "features": [
+        "sepal length (cm)",
+        "sepal width (cm)",
+        "petal length (cm)",
+        "petal width (cm)"
+    ]
+}

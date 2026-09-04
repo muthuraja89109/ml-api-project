@@ -1,4 +1,6 @@
 from pathlib import Path
+from datetime import datetime
+import json
 
 import joblib
 import pandas as pd
@@ -14,7 +16,12 @@ from sklearn.metrics import accuracy_score, classification_report
 
 project_root = Path(__file__).resolve().parent.parent
 
-dataset_path = project_root / "ml" / "data" / "iris_dataset.csv"
+dataset_path = (
+    project_root
+    / "ml"
+    / "data"
+    / "iris_dataset.csv"
+)
 
 
 # ============================================================
@@ -37,7 +44,7 @@ y = data["species"]
 
 
 # ============================================================
-# 4. Split the dataset into training and testing data
+# 4. Split dataset
 # ============================================================
 
 X_train, X_test, y_train, y_test = train_test_split(
@@ -50,7 +57,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 
 # ============================================================
-# 5. Create the machine learning model
+# 5. Create ML model
 # ============================================================
 
 model = RandomForestClassifier(
@@ -60,7 +67,7 @@ model = RandomForestClassifier(
 
 
 # ============================================================
-# 6. Train the model
+# 6. Train model
 # ============================================================
 
 model.fit(X_train, y_train)
@@ -74,10 +81,13 @@ y_pred = model.predict(X_test)
 
 
 # ============================================================
-# 8. Evaluate the model
+# 8. Evaluate model
 # ============================================================
 
-accuracy = accuracy_score(y_test, y_pred)
+accuracy = accuracy_score(
+    y_test,
+    y_pred
+)
 
 print()
 print("Model Training Completed")
@@ -89,20 +99,84 @@ print(classification_report(y_test, y_pred))
 
 
 # ============================================================
-# 9. Save the trained model
+# 9. Save trained model
 # ============================================================
 
-model_directory = project_root / "ml" / "saved_model"
+model_directory = (
+    project_root
+    / "ml"
+    / "saved_model"
+)
 
 model_directory.mkdir(
     parents=True,
     exist_ok=True
 )
 
-model_path = model_directory / "model.joblib"
 
-joblib.dump(model, model_path)
+model_path = (
+    model_directory
+    / "model.joblib"
+)
 
+joblib.dump(
+    model,
+    model_path
+)
+
+
+# ============================================================
+# 10. Save model metadata
+# ============================================================
+
+metadata = {
+
+    "model_type": type(model).__name__,
+
+    "model_version": "1.0.0",
+
+    "training_date": datetime.now().strftime(
+        "%Y-%m-%d %H:%M:%S"
+    ),
+
+    "accuracy": round(
+        float(accuracy),
+        4
+    ),
+
+    "features": list(X.columns)
+}
+
+
+metadata_path = (
+    model_directory
+    / "metadata.json"
+)
+
+
+with open(
+    metadata_path,
+    "w",
+    encoding="utf-8"
+) as file:
+
+    json.dump(
+        metadata,
+        file,
+        indent=4
+    )
+
+
+# ============================================================
+# 11. Final output
+# ============================================================
 
 print("------------------------")
-print(f"Model saved successfully to: {model_path}")
+
+print(
+    f"Model saved successfully to: {model_path}"
+)
+
+print(
+    f"Metadata saved successfully to: {metadata_path}"
+)

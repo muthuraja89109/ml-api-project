@@ -1,3 +1,35 @@
+# Environments
 venv/
-__pycache__/
+env/
+.venv/
 .env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Logs
+app.log
+*.log
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter (if used for exploration)
+.ipynb_checkpoints/

@@ -1,3 +1,5 @@
+from typing import List
+
 from pydantic import BaseModel, Field
 
 
@@ -31,3 +33,23 @@ class PredictionOutput(BaseModel):
     prediction: str
     confidence: float
     request_id: str
+
+class PredictionV2Output(BaseModel):
+    prediction: str
+    probabilities: dict[str, float]
+    request_id: str
+
+
+class PredictionBatchInput(BaseModel):
+    inputs: List[PredictionInput]
+
+
+class PredictionBatchOutput(BaseModel):
+    predictions: List[PredictionOutput]
+
+class ModelInfo(BaseModel):
+    model_type: str
+    model_version: str
+    training_date: str
+    accuracy: float
+    features: List[str]
