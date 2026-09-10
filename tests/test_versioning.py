@@ -1,4 +1,4 @@
-def test_v1_and_v2_have_different_response_shapes(client):
+def test_v1_and_v2_have_different_response_shapes(client, auth_headers):
 
     payload = {
         "sepal_length": 5.1,
@@ -10,13 +10,15 @@ def test_v1_and_v2_have_different_response_shapes(client):
     # Call v1
     v1_response = client.post(
         "/api/v1/predict",
-        json=payload
+        json=payload,
+        headers=auth_headers
     )
 
     # Call v2
     v2_response = client.post(
         "/api/v2/predict",
-        json=payload
+        json=payload,
+        headers=auth_headers
     )
 
     # Both endpoints must work

@@ -2,9 +2,10 @@ import logging
 from uuid import uuid4
 
 import pandas as pd
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 
 from app.models.schemas import PredictionInput, PredictionV2Output
+from app.security import verify_api_key
 
 
 router = APIRouter(
@@ -25,7 +26,8 @@ FEATURE_NAMES = [
 
 @router.post(
     "/predict",
-    response_model=PredictionV2Output
+    response_model=PredictionV2Output,
+    dependencies=[Depends(verify_api_key)]
 )
 def predict_v2(
     data: PredictionInput,

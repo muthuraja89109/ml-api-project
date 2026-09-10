@@ -9,7 +9,8 @@ import time
 from uuid import uuid4
 
 import pandas as pd
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
+from app.security import verify_api_key
 
 from app.config import settings
 
@@ -59,7 +60,8 @@ def health(request: Request):
 
 @router.post(
     "/predict",
-    response_model=PredictionOutput
+    response_model=PredictionOutput,
+    dependencies=[Depends(verify_api_key)]
 )
 def predict(
     data: PredictionInput,
@@ -127,7 +129,8 @@ def predict(
 
 @router.post(
     "/predict-batch",
-    response_model=PredictionBatchOutput
+    response_model=PredictionBatchOutput,
+    dependencies=[Depends(verify_api_key)]
 )
 def predict_batch(
     data: PredictionBatchInput,

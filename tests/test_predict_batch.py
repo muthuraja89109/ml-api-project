@@ -1,7 +1,7 @@
 from app.config import settings
 
 
-def test_predict_batch_oversized_rejected(client):
+def test_predict_batch_oversized_rejected(client, auth_headers):
 
     inputs = [
         {
@@ -15,7 +15,8 @@ def test_predict_batch_oversized_rejected(client):
 
     response = client.post(
         "/api/v1/predict-batch",
-        json={"inputs": inputs}
+        json={"inputs": inputs},
+        headers=auth_headers
     )
 
     assert response.status_code == 400

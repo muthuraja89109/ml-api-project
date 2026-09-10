@@ -1,9 +1,11 @@
 from typing import List
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class PredictionInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     sepal_length: float = Field(
         ...,
         gt=0,
@@ -34,6 +36,7 @@ class PredictionOutput(BaseModel):
     confidence: float
     request_id: str
 
+
 class PredictionV2Output(BaseModel):
     prediction: str
     probabilities: dict[str, float]
@@ -41,11 +44,14 @@ class PredictionV2Output(BaseModel):
 
 
 class PredictionBatchInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     inputs: List[PredictionInput]
 
 
 class PredictionBatchOutput(BaseModel):
     predictions: List[PredictionOutput]
+
 
 class ModelInfo(BaseModel):
     model_type: str
