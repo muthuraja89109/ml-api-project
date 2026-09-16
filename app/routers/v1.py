@@ -10,6 +10,7 @@ from uuid import uuid4
 
 import pandas as pd
 from fastapi import APIRouter, Depends, HTTPException, Request
+from prometheus_client import Counter
 from app.security import verify_api_key
 
 from app.config import settings
@@ -37,6 +38,17 @@ FEATURE_NAMES = [
     "petal length (cm)",
     "petal width (cm)"
 ]
+
+
+# ============================================================
+# CUSTOM PROMETHEUS METRIC
+# ============================================================
+
+prediction_counter = Counter(
+    "ml_predictions_total",
+    "Total number of predictions made, labeled by predicted class",
+    ["predicted_class"]
+)
 
 
 # ============================================================
@@ -104,6 +116,8 @@ def predict(
             f"prediction={prediction} | "
             f"confidence={confidence:.4f}"
         )
+
+        prediction_counter.labels(predicted_class=str(prediction)).inc()
 
         return {
             "prediction": str(prediction),
@@ -214,6 +228,8 @@ def predict_batch(
             confidence = prediction_probabilities[
                 index
             ][prediction_index]
+
+            prediction_counter.labels(predicted_class=str(prediction)).inc()
 
             results.append(
                 PredictionOutput(

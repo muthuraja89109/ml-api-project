@@ -19,4 +19,12 @@ EXPOSE 8000
 # 127.0.0.1 would only accept connections from inside the container
 # itself, so requests from the host machine (or your browser) would
 # never reach it.
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+#
+# --workers 2 runs two separate Uvicorn worker processes instead of
+# one. Prediction is CPU-bound (tree traversal in the Random Forest),
+# and Python's GIL means CPU-bound work doesn't truly parallelize
+# across threads within a single process. Multiple worker processes
+# each get their own interpreter (and GIL), letting real work happen
+# in parallel — this was found to meaningfully reduce average
+# response time under concurrent load (see TESTING.md).
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]

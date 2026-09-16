@@ -1,11 +1,14 @@
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
+from prometheus_fastapi_instrumentator import Instrumentator
 
 import joblib
 from fastapi import FastAPI
 from app.routers.v2 import router as v2_router
 from app.config import settings
 from app.routers.v1 import router as v1_router
+
+
 
 
 # ============================================================
@@ -40,6 +43,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ============================================================
+# PROMETHEUS MONITORING
+# ============================================================
+
+# Instruments the app with default metrics (request count, latency, etc.)
+# and exposes them at GET /metrics for Prometheus to scrape.
+Instrumentator().instrument(app).expose(app)
+
+
 # ============================================================
 # ROOT
 # ============================================================
